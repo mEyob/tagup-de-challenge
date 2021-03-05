@@ -157,25 +157,41 @@ def create_hypertable(connection, table, column):
 
 
 def setup_database():
+    """Create the measurements & machines tables in
+    the example_co database, create a hypertable based on
+    the time column of the measurements table, and insert 
+    machines (ids) in the machines table 
+
+    Returns:
+        response: a dict of execution status and possibly
+        errors
+    """
     machine_count = 20
-    con = connect()
-    print(f"Connection request response: {con}")
-    if con["status"] == 0:
-        connection = con["con"]
-        drop_table(connection, "example_co.measurements")
-        drop_table(connection, "example_co.machines")
+    connection = connect()
 
-        resp = create_tables(connection)
-        print(f"Table creation response: {resp}")
+    if connection.get("status") != 0:
+        return {
+            "status": connection.get("status"),
+            "error": connection.get("error")
+        }
 
-        resp = create_hypertable(connection, "example_co.measurements", "time")
-        print(f"Hypertable creation response: {resp}")
+    connection = connection["con"]
+    drop_table(connection, "example_co.measurements")
+    drop_table(connection, "example_co.machines")
 
-        resp = insert(con["con"], "example_co.machines",
+    response = create_tables(connection)
+    if response.get("status") != 0:
+        return response
+
+    response = create_hypertable(connection, "example_co.measurements", "time")
+    if response.get("status") != 0:
+        return response
+
+    response = insert(connection, "example_co.machines",
                       ("id", "name", "description"),
                       [(m_id, None, None)
                        for m_id in range(1, machine_count + 1)], True)
-        print(f"Insert statement response: {resp}")
+    return response
 
 
 if __name__ == "__main__":
