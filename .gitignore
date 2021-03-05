@@ -144,3 +144,7 @@ cython_debug/
 
 # Background process output
 nohup*
+
+# log & staging folders
+log/*
+staging/*
