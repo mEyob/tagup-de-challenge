@@ -39,7 +39,7 @@ def connect():
     return response
 
 
-def insert(connection, table, columns, records, batch=False):
+def insert(connection, table, columns, records, batch=True):
     """Batch insert rows into example_co database.
 
     Args:
@@ -191,6 +191,7 @@ def setup_database():
                       ("id", "name", "description"),
                       [(m_id, None, None)
                        for m_id in range(1, machine_count + 1)], True)
+    connection.commit()
     return response
 
 
