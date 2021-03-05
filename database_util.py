@@ -154,3 +154,29 @@ def create_hypertable(connection, table, column):
     finally:
         cursor.close()
     return response
+
+
+def setup_database():
+    machine_count = 20
+    con = connect()
+    print(f"Connection request response: {con}")
+    if con["status"] == 0:
+        connection = con["con"]
+        drop_table(connection, "example_co.measurements")
+        drop_table(connection, "example_co.machines")
+
+        resp = create_tables(connection)
+        print(f"Table creation response: {resp}")
+
+        resp = create_hypertable(connection, "example_co.measurements", "time")
+        print(f"Hypertable creation response: {resp}")
+
+        resp = insert(con["con"], "example_co.machines",
+                      ("id", "name", "description"),
+                      [(m_id, None, None)
+                       for m_id in range(1, machine_count + 1)], True)
+        print(f"Insert statement response: {resp}")
+
+
+if __name__ == "__main__":
+    setup_database()
