@@ -71,3 +71,86 @@ def insert(connection, table, columns, records, batch=False):
     finally:
         cursor.close()
     return response
+
+
+def create_tables(connection):
+    """Create tables specified in the 'schema' dict.
+
+    Args:
+        connection: database connection
+
+    Returns:
+        response: a dict of execution status and possibly
+        errors
+    """
+    response = {}
+    cursor = connection.cursor
+    cursor = connection.cursor()
+
+    for table in schema.keys():
+        statement = f"CREATE TABLE IF NOT EXISTS {table}("
+        for column, dtype in schema[table].items():
+            statement += column + ' ' + dtype + ', '
+        statement = statement.rstrip(', ')
+        statement += ");"
+        try:
+            cursor.execute(statement)
+            response["status"] = 0
+        except psycopg2.DatabaseError as err:
+            response["status"] = 1
+            response["error"] = str(err)
+    cursor.close()
+    return response
+
+
+def drop_table(connection, table):
+    """Drop database table.
+
+    Args:
+        connection: database connection
+        table: table to be dropped
+
+    Returns:
+        response: a dict of execution status and possibly
+        errors
+    """
+    response = {}
+    statement = f"DROP TABLE IF EXISTS {table}"
+    cursor = connection.cursor()
+    try:
+        cursor.execute(statement)
+        response["status"] = 0
+    except psycopg2.DatabaseError as err:
+        response["status"] = 1
+        response["error"] = str(err)
+    finally:
+        cursor.close()
+    return response
+
+
+def create_hypertable(connection, table, column):
+    """Create a timescaledb hypertable
+
+    Args:
+        connection: database connection
+        table: table for which hypertable is going
+        to be created
+        column: the column used to create hypertable
+        chunks
+
+    Returns:
+        response: a dict of execution status and possibly
+        errors
+    """
+    response = {}
+    cursor = connection.cursor()
+    statement = f"SELECT create_hypertable('{table}', '{column}');"
+    try:
+        cursor.execute(statement)
+        response["status"] = 0
+    except psycopg2.DatabaseError as err:
+        response["status"] = 1
+        response["error"] = str(err)
+    finally:
+        cursor.close()
+    return response
