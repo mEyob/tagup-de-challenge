@@ -3,6 +3,7 @@ import logging
 import numpy as np
 import pandas as pd
 import database_util
+import gdrive_download
 
 STAGING_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                             "staging")
@@ -43,3 +44,16 @@ def csv_to_database(csv_file, col_names=COLUMNS):
     else:
         logging.error(response.get("error"))
         return response
+
+
+def main():
+    """Download new measurements from Google Drive and 
+    write them to database.
+    """
+    gdrive_download.main()
+    for csv_file in os.listdir(STAGING_PATH):
+        csv_to_database(csv_file)
+
+
+if __name__ == "__main__":
+    main()
