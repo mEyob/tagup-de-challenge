@@ -190,7 +190,7 @@ def setup_database():
     response = insert(connection, "example_co.machines",
                       ("id", "name", "description"),
                       [(m_id, None, None)
-                       for m_id in range(1, machine_count + 1)], True)
+                       for m_id in range(machine_count)], True)
     connection.commit()
     return response
 
