@@ -148,3 +148,9 @@ nohup*
 # log & staging folders
 log/*
 staging/*
+
+# Credentials
+credentials.json
+token.pickle
+
+.last_download_date
