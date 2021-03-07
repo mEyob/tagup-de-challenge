@@ -13,6 +13,9 @@ The purpose:
 - Identify the time epoches at which the machines change state (from *normal* to *faulty* then to *failed*) by analyzing the cleaned data
 
 ### The approach in this repository
+
+<center><img src="img/flowchart.png" style="width: 200px; height: 300px" /></center>
+
 ### Filtering measurement errors and identifying the three machine states 
 ### Setup using an Amazon EC2 instance
 To run the code in this repository on an Amazon EC2, follow these steps.
@@ -31,6 +34,10 @@ To run the code in this repository on an Amazon EC2, follow these steps.
     - Create a database user and grant it a superuser access so that it 
 can enable the timescaledb extension
     - create a database and schema with name ```example_co```
+    - Save the login credentials of the new user in an environment variable named ```DBCON```. For example,
+    ```bash
+    export DBCON='{"database": "example_co", "user": "user", "password": "password"}'
+    ```
 
 - Then follow the instructions on [this](https://developers.google.com/drive/api/v3/quickstart/python) page (only step 1) to enable access to the Google Drive where the csv files are saved.
 
