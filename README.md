@@ -6,7 +6,7 @@
 1. [Next steps](README.md#Next-steps)
 
 ### Introduction
-Machines can be in one of three states. In a *normal* mode a machine operates as it should and measured data behaves in a predictable way with moderate noise. In the second, *faulty*, state the measured data behaves differently. Finally, in the *failed* state all measurements are close to zero
+Machines can be in one of three states. In a *normal* mode a machine operates as it should, and the measured data behaves in a predictable way with moderate noise. In the second, *faulty*, state the measured data behaves differently. Finally, in the *failed* state all measurements are close to zero
 
 The goal:
 - Get csv files containing sensor readings from Google Drive, filter out erroneous readings and map the data into a database
@@ -15,23 +15,23 @@ The goal:
 ### The approach in this repository
 
 The following flowchart illustrates the approach used in this repository to achieve the goals 
-<center><img src="img/flowchart.png" align="middle" style="width: 200px; height: 300px" /></center>
+<center><img src="img/flowchart.png" align="middle" /></center>
  
 [Timescaledb](https://www.timescale.com/) is chosen as the database for the following reasons
-Why Timescaledb:
+
+- It is built as an extension of Postgres which is one of the popular open source DBMS with rich developer community. Therefore, it is easier to learn compared to other specialized database systems.
 - It has built in functions such as ```time_bucket``` that are handy for querying time series data
-- It is built as an extension of Postgres which is one of the popular open source DBMS with rich developer community. 
 - For time series data, [it scales well](https://blog.timescale.com/blog/timescaledb-vs-6a696248104e/) in comparison to Postgres
 
 Like other relational databases, coping with schema change and scalability are concerns one needs to consider with timescaledb.
 
 ### Filtering measurement errors and identifying the three machine states 
 
-Before writing the measurement data, we need to check it for possible outliers. The following figure shows histograms of all four types of metrics collected for machine 1.
+Before writing the measurement data to database, we need to check it for possible outliers. The following figure shows histograms of all four types of metrics collected for machine 1.
 
 <center><img src="img/hist.png" align="middle" /></center>
 
-The histograms show that most of the data points fall in between -100 and 100 with some outliers.
+The histograms show that most of the data points fall in between -100 and 100 with some outliers around -300 and 300.
 
 Filtering out those outliers and focusing on the values between -100 and 100, we can see three distinct parts in the following scatter plot. 
 
@@ -39,9 +39,9 @@ Filtering out those outliers and focusing on the values between -100 and 100, we
 
 In the left part, roughly for measurement taken before 06/2020, the machine is operating normally with the measurements showing moderate variation. In the middle part, in between 06/2020 and 08/2020, the measurements show more variation while the machine enters a faulty mode. In the rightmost part, all readings are close to zero and the machine is in failed mode.
 
-One approach for detecting and preventing failure is by calculating the variation over time and sending alerts when the variation increasing beyond some threshold.
+One approach for detecting and preventing failure is by calculating the variation over time and sending alerts when the variation increases beyond some threshold.
 
-The following figure shows a seven-day rolling standard deviation of all four metrics for machine 1. All of them show the relay qualitative message that the rolling standard deviation ramps up in the faulty state before going to near-zero in the failed state.
+Let us take standard deviation as the measure of variation. The following figure shows a *seven-day rolling standard deviation* of all four metrics for machine 1. All of the plots relay the same qualitative message that the rolling standard deviation ramps up in the faulty state before going to near-zero in the failed state.
 
 <center><img src="img/rolling-std.png" align="middle" /></center>
 
@@ -76,3 +76,6 @@ can enable the timescaledb extension
     ```
 
 ### Next steps
+- Create a public API to which users can load csv files to be filtered and mapped to a database
+- The implementation in this repository has tightly coupled via a chain of function calls. A tool like Airflow could be used instead to handle tasks separately
+- Unit tests should be created to test the functions and modules 
