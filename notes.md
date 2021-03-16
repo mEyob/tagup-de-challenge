@@ -21,10 +21,13 @@
 
     - The database schema has two tables: machines & measurements
     - machine_id links the two tables 
-    - Chose Timescaledb because it is a relational database but still scales well for time series data
-    compared to other generic relational databases
 
     <center><img style="width: 30%;" src="img/er-diagram.png" align="middle" /></center>
+    
+    
+    - I chose Timescaledb because 
+        - it is a relational database but still scales well for time series data compared to other generic relational databases
+        - it also provides builtin functions such as ```time_bucket``` that are very usefull to query a time series data
 
 <!---
 - Limitations
@@ -40,7 +43,7 @@
 - Future direction
     - Build a dashboard (e.g. using Grafana) to visualize recent readings and current state of machines. For example, create a heatmap of machine id vs state
     - 7-day rolling STD - period selected arbitrarily
-    - threshold for alarming the start of faulty mode needs to be experimented
+    - Threshold for alarming the start of faulty mode needs to be experimented
     - Alternative approach:
         - use the model: f(t) = w_0 + w_1 * sin(2pi * t/T + phi) + e
         - transform this to linear using the trignometric identity and use linear regression
