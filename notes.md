@@ -28,6 +28,7 @@
     - I chose Timescaledb because 
         - it is a relational database but still scales well for time series data compared to other generic relational databases
         - it also provides builtin functions such as ```time_bucket``` that are very usefull to query a time series data
+    - The repo also provides Terraform scripts to setup an EC2 run the scripts
 
 <!---
 - Limitations
