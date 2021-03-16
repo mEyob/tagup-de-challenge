@@ -26,23 +26,16 @@
 
     <center><img style="width: 30%;" src="img/er-diagram.png" align="middle" /></center>
 
-
+<!---
 - Limitations
     - If filename structure changes from machine_\[x\].csv the script cannot extract the machine id from the filename. Hence, nothing will be written to database
     - If the order of columns in  the dataframe changes from *time, column1, column2, ..* either the pd.read_csv method will encounter error or the loaded data will be incorrectly interpreted.
     - The filtering function also depends on the order of columns in the dataframe. So it may raise an error if columns are encoutered out of order
     - create_tables method works only if table definition contains only column names & datatype (e.g. if constraints are there that will cause problem)
-
+<!---
 > In summary, the script is heavily dependent on the assumption that the data is in 
 > the form [time, metric1, metric2, metric3, ...]
-
-- Unit test
-    - ingress.csv_to_database: 
-        - unit test for machine id extraction with correct & wrong filename format
-        - check when database insert is successful that response status is 0, summary statistics is correct & file is deleted
-        - check when db insert is unsuccessful that error message is logged
-    - database_util.insert: Check if rows are appropriately inserted into DB by mocking the DB execution part
-    - Other methods in database_util: Skip writing unit test b/c not much value in writing the test when the state of the database cannot be mocked properly
+--->
 
 - Future direction
     - Build a dashboard (e.g. using Grafana) to visualize recent readings and current state of machines. For example, create a heatmap of machine id vs state
@@ -53,3 +46,11 @@
         - transform this to linear using the trignometric identity and use linear regression
         - use the regression model to forecast future readings, and alarm if readings are substantially 
         different than forecasted
+
+- Unit test
+    - ingress.csv_to_database: 
+        - unit test for machine id extraction with correct & wrong filename format
+        - check when database insert is successful that response status is 0, summary statistics is correct & file is deleted
+        - check when db insert is unsuccessful that error message is logged
+    - database_util.insert: Check if rows are appropriately inserted into DB by mocking the DB execution part
+    - Other methods in database_util: Skip writing unit test b/c not much value in writing the test when the state of the database cannot be mocked properly
