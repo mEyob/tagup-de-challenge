@@ -31,8 +31,8 @@ def main():
     drive_service = build('drive', 'v3', credentials=creds)
 
     page_token = None
-    dtime = download_time("get")
-    query = f"name contains 'machine' and name contains '.csv' and modifiedTime > '{dtime}'"
+    last_dtime = download_time("get")
+    query = f"name contains 'machine' and name contains '.csv' and modifiedTime > '{last_dtime}'"
     while True:
         response = drive_service.files().list(
             q=query,
